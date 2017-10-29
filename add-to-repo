@@ -1,0 +1,17 @@
+#!/bin/bash
+
+packages=$@
+
+echo ${packages}
+
+if [ -z "${packages}" ];
+then
+    echo "Usage: add-to-repo <package> <package> ..."
+    exit 1
+fi
+
+cd /var/www/debian/dists/stretch/main/binary-amd64
+
+apt-get download $(apt-rdepends ${packages} | grep -v "^ ") 2> /dev/null
+
+repomanager

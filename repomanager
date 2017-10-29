@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+set -u
+set -x
+
+root="/var/www/debian/"
+path="dists/stretch"
+config="Codename: stretch"
+
+cd ${root}
+
+find . -name Packages -delete
+find . -name Release -delete
+find . -name Release.gpg -delete
+
+apt-ftparchive packages ${path}/main/binary-amd64 > ${path}/main/binary-amd64/Packages
+echo "${config}" > ${path}/Release
+apt-ftparchive release ${path} >> ${path}/Release
+gpg --sign -bao ${path}/Release.gpg ${path}/Release
